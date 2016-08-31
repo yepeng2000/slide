@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+
+.wrap{
+	width: 650px;
+	height:500px;		
+	margin:50px auto;
+	overflow:hidden;
+	position:relative;
+}
+
+.image-list{
+	position:absolute;
+	top: 0;
+	left: 0;
+	 width: 3900px;
+	 height: 500px;		
+	
+}
+
+.item{
+	width: 650px;
+	height:500px;
+	display:block;
+	float:left;
+}
+
+.control-list{
+  position: absolute;
+  width: 210px;
+  bottom: 50px;
+  left: 50%;
+  margin-left: -105px;
+}
+
+.control-list .control{
+	width: 30px;
+	height: 30px;
+	display: block;
+	float: left;
+	margin-left: 5px;	
+	background: #ccc;
+	cursor:pointer;
+}
+
+.control-list .control.active{
+	background: darkred;
+}
+</style>
+</head>
+
+
+<body>
+<div class="wrap">
+	<div class="image-list">
+		<img class="item show" src="images/1.jpg"></img>
+		<img class="item" src="images/2.jpg"></img>
+		<img class="item" src="images/3.jpg"></img>
+		<img class="item" src="images/4.jpg"></img>
+		<img class="item" src="images/5.jpg"></img>
+		<img class="item" src="images/6.jpg"></img>	
+	</div>
+	<div class="control-list">
+		<span class="control active"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+	</div>
+</div>
+
+<script>
+window.onload = function(){
+ 	var oImageList = document.getElementsByClassName('image-list')[0];
+	var oControls = document.getElementsByClassName('control');
+	var W=650;
+	var count=oImageList.getElementsByClassName('item').length;
+	var iNow = 0;
+	var timer;
+	
+	/*
+	* direction:
+	* 	- left: 1
+	*   - right: 0
+	*/
+	var move = function(direction){
+		// left
+		if(direction === 1){
+			if(++iNow===count){
+				iNow = 0;
+				oImageList.style.transition = '';
+				oImageList.style.left =  -(W * iNow) + 'px' ;
+			}else{
+				oImageList.style.left =  -(W * iNow) + 'px' ;
+				oImageList.style.transition = 'left 0.5s ease-out';
+			}	  		
+		}else{ // right
+			if(--iNow<0){
+				iNow = count-1;
+				oImageList.style.transition = '';
+				oImageList.style.left = -(W * iNow) + 'px';
+			}else{
+				oImageList.style.left = -(W * iNow) + 'px';
+				oImageList.style.transition = 'left 0.5s ease-out';	
+			}	  		
+		}
+		
+		updateControlClass(iNow);			
+	};
+	
+	var updateControlClass = function(current){
+		for(var i=0; i<oControls.length; i++){
+			oControls[i].classList.remove('active');
+		}
+		
+		oControls[current].classList.add('active');
+	};
+	
+	for(var i=0; i<oControls.length; i++){
+		(function(index){
+			oControls[index].onclick = function(){
+				clearInterval(timer);
+				
+				iNow = index;
+				oImageList.style.transition = '';
+				oImageList.style.left = -(W * iNow) + 'px';	
+				
+				updateControlClass(iNow);		
+				
+				timer = setInterval(function(){
+					move(1);	
+				}, 1000);
+			};
+		})(i);	
+	}
+	
+	timer = setInterval(function(){
+		move(1);	
+	}, 1000);
+};
+
+
+</script>
+</body>
+</html>

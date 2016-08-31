@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title></title>
+
+	<style type="text/css">
+		body{
+			margin: 0;
+		}
+		.wrap{
+			margin: 50px auto;
+			width: 650px;
+			height: 500px;
+			position: relative;
+		}
+		.item{
+			width: 650px;
+			height: 500px;
+			position: absolute;
+			left: 0;
+			top: 0;
+			display: none;
+		}
+		.item.show{
+			display: block;
+		}
+
+		.control-list{
+			position: absolute;
+			bottom: 20px;
+			width: 132px;
+			left: 50%;
+			margin-left: -66px;
+		}
+
+		.control-list .control{
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: #ccc;
+			display: block;
+			float: left;
+			margin-right: 2px;
+			cursor: pointer;
+		}
+
+		.control-list .control.active{
+			background: darkred;
+		}
+	</style>
+</head>
+<body>
+
+<div class="wrap">
+	<div class="image-list">
+		<img class="item show" src="1.jpg"></img>
+		<img class="item" src="images/2.jpg"></img>
+		<img class="item" src="images/3.jpg"></img>
+		<img class="item" src="images/4.jpg"></img>
+		<img class="item" src="images/5.jpg"></img>
+		<img class="item" src="images/6.jpg"></img>	
+	</div>
+	<div class="control-list">
+		<span class="control active"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+		<span class="control"></span>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	"use strict";
+
+	window.onload = function(){
+		var oImgs = document.getElementsByClassName('item');
+		var oControl = document.getElementsByClassName('control');
+		var oBtns = document.getElementsByClassName('btn');
+		var iNow = 0;
+
+		var createTimer = function(){
+			return setInterval(function(){
+				var pre = iNow;
+
+				if(iNow + 1 == oImgs.length){
+					iNow = 0;
+				}else{
+					++iNow;
+				}
+
+				oImgs[iNow].classList.add('show');
+				oImgs[pre].classList.remove('show');
+
+				oControl[iNow].classList.add('active');
+				oControl[pre].classList.remove('active');
+			}, 1000);	
+		};
+
+		var timer = createTimer(); 
+
+		
+		for(var i=0; i<oControl.length; i++){
+			oControl[i].onclick = (function(i){
+				return function(){
+					clearInterval(timer);
+					
+					oImgs[i].classList.add('show');
+					oImgs[iNow].classList.remove('show');
+
+					oControl[i].classList.add('active');
+					oControl[iNow].classList.remove('active');
+					iNow = i;
+
+					timer = createTimer();
+				};
+				
+			})(i);
+		}
+
+
+	};
+</script>
+</body>
+</html>
